@@ -1,0 +1,27 @@
+# docker compose up -d --build   ->  http://YOUR_SERVER:8000
+# Uses its own MongoDB as a single-node replica set, so live sync (change streams) works.
+# Already on MongoDB Atlas? Delete the "mongo" service and set MONGODB_URI in backend/.env.
+services:
+  mongo:
+    image: mongo:7
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    restart: unless-stopped
+    volumes: [mongo-data:/data/db]
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongo:27017'}]}).ok }"]
+      interval: 10s
+      start_period: 20s
+
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: backend/.env
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/?replicaSet=rs0
+      WORKERS: "2"
+    depends_on:
+      mongo: { condition: service_healthy }
+    ports: ["8000:8000"]
+
+volumes:
+  mongo-data:

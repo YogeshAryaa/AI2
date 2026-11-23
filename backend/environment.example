@@ -1,0 +1,92 @@
+# ======================= Required =======================
+MONGODB_URI=mongodb://localhost:27017
+MONGODB_DB=ragapp
+# Admin login for this app's UI (full access). Make it long and random, e.g.:
+#   python -c "import secrets; print(secrets.token_urlsafe(32))"
+# Do NOT give this to your other systems: create an API key per system in "Connect apps".
+ADMIN_TOKEN=change-me-to-a-long-random-string
+# Encrypts stored provider API keys. Never change it after adding providers.
+APP_SECRET_KEY=change-me-to-another-long-random-string
+
+# ======================= Security =======================
+# Browsers allowed to call the API directly (your systems should call it from their servers instead)
+CORS_ORIGINS=http://localhost:3000,http://localhost:5173
+# false in production hides the interactive /docs page
+DOCS_ENABLED=true
+MAX_UPLOAD_MB=50
+# default requests/minute for new app keys
+DEFAULT_KEY_RPM=120
+
+# ======================= Embeddings =======================
+# multilingual-e5-small: English + Hindi + Hinglish, fast on CPU (default).
+# Stronger but ~4x slower: BAAI/bge-m3. English-only (old default): BAAI/bge-small-en-v1.5
+# Changing this re-embeds all your data automatically in the background (no re-upload needed).
+EMBEDDING_MODEL=intfloat/multilingual-e5-small
+# Leave empty: the right prefixes are chosen for known models. "none" disables them.
+QUERY_PREFIX=
+DOC_PREFIX=
+# torch | onnx (onnx ~2x faster on CPU, needs: pip install "optimum[onnxruntime]")
+EMBEDDING_BACKEND=torch
+EMBEDDING_BATCH_SIZE=64
+# Optional re-ranker for higher accuracy (+~0.2 s per question, ~500 MB download):
+# RERANKER_MODEL=cross-encoder/mmarco-mMiniLMv2-L12-H384-v1
+RERANKER_MODEL=
+
+# ======================= Vector search =======================
+# local = in this server's memory (any MongoDB; ~1.5 GB RAM per 1M pieces with float32)
+# atlas = MongoDB Atlas $vectorSearch (millions of pieces, no RAM needed; free M0 tier works)
+VECTOR_BACKEND=local
+VECTOR_INDEX_NAME=vector_index
+# float16 halves the RAM of the local index (slightly slower search)
+VECTOR_DTYPE=float32
+
+# ======================= Answering defaults (also editable in the UI) =======================
+# auto = match level measured from your data | manual = use MIN_SCORE
+MIN_SCORE_MODE=auto
+MIN_SCORE=0.5
+TOP_K=5
+CACHE_ENABLED=true
+CACHE_THRESHOLD=0.97
+CACHE_TTL_DAYS=14
+# false = your data is only sent to providers marked "local" (e.g. Ollama)
+SEND_CONTEXT_TO_EXTERNAL=true
+MAX_CONTEXT_CHARS=6000
+QUERY_REWRITE=true
+# Chat history retention in days (0 = keep forever)
+HISTORY_DAYS=0
+
+# ---- Files the AI makes in the chat: "iski PDF bana do", "make a PDF on our leave policy",
+# "ek office poster ki image banao". PDFs are made on this server; for images only the prompt is sent out.
+CHAT_FILES=true
+# Order to try, comma separated: local = your own image AI on this server (free, private, unlimited)
+# | pollinations = free online, no key | openai = any OpenAI-compatible /images/generations API | off
+# "local" alone = never use an online service. In the chat, "online" / "apne AI se" picks one for that image.
+IMAGE_PROVIDER=local,pollinations
+# Own image AI (diffusers). ~2.5 GB download once. Check the model licence before commercial use.
+IMAGE_LOCAL_MODEL=stabilityai/sd-turbo
+IMAGE_LOCAL_STEPS=2
+# default colour of chat PDFs (blue, green, red, purple, orange, teal, ...); "green theme mein PDF" overrides it
+PDF_COLOR=blue
+# openai examples: https://api.openai.com/v1 (gpt-image-1), https://api.together.xyz/v1 (black-forest-labs/FLUX.1-schnell)
+IMAGE_API_URL=
+IMAGE_API_KEY=
+IMAGE_MODEL=
+IMAGE_SIZE=1024x1024
+# delete generated files after N days (0 = keep)
+FILES_DAYS=0
+
+# ---- Studio (Scan & read, Resume builder, Poster maker): runs on this server, no AI service.
+# OCR languages (EasyOCR codes). Hindi works together with English. "en" alone is a bit faster.
+OCR_LANGUAGES=en,hi
+# where the OCR models (~100 MB, downloaded once) are kept; empty = ~/.EasyOCR
+OCR_MODEL_DIR=
+
+CHUNK_CHARS=1000
+CHUNK_OVERLAP=150
+
+# ======================= MongoDB auto-sync =======================
+#   (empty) = only collections you connect in the UI | * = every collection | products,orders = these
+AUTO_SYNC_COLLECTIONS=
+AUTO_SYNC_MINUTES=5
+# 0 = no limit on records per collection
+SYNC_MAX_RECORDS=0

@@ -1,0 +1,22 @@
+{
+  "collection": "kb_general",
+  "tags": ["general", "assistant"],
+  "items": [
+    {"id": "how-to-use-app", "q": "How do I use this app?", "also": ["ye app kaise use kare", "is app me kya kar sakte hai", "how does this assistant work"],
+     "a": "How to use this app:\n• Ask tab: type any question. I look in your company data first, and if nothing matches, a free AI answers (when one is set up).\n• My data tab: add text, upload files (PDF, Word, Excel, CSV) or connect MongoDB collections.\n• AI providers tab: add free AI APIs (Groq, Gemini, OpenRouter...). They are tried in order; if one fails or hits its limit, the next one is used automatically.\n• Connect apps tab: create API keys so your other systems (staffing, marketing) can use the assistant."},
+    {"id": "add-own-answer", "q": "How do I add my own answers?", "also": ["apna jawab kaise add kare", "manual reply kaise dale", "bot ko kaise sikhaye", "train kaise kare"],
+     "a": "To teach me your own answers: go to My data → Add text, put the question as Title and write the text as \"Q: <question>\" on the first line and \"A: <answer>\" on the next line. Then I reply with exactly that answer, even without any AI. You can also click \"Save to my data\" under any good AI answer, or edit the JSON files in backend/seed_data and run seed_data.py to load many answers at once."},
+    {"id": "failover", "q": "What happens if an AI provider fails or hits its limit?", "also": ["ek ai ka limit khatam ho gaya to", "ai fail ho jaye to kya hoga", "failover kaise kaam karta hai"],
+     "a": "AI providers are tried in the order shown in the AI providers tab (top first). If one gives an error, times out or hits its rate limit (HTTP 429), it is paused for a while and the next provider is tried automatically, then the third, and so on. If no AI is available at all, I answer directly from your data without AI. Use the arrows in the AI providers tab to change the order."},
+    {"id": "data-privacy", "q": "Is my data safe?", "also": ["data safe hai kya", "data bahar jata hai kya", "privacy"],
+     "a": "Your data is stored in your own MongoDB and searched locally on your server. By default only the question (not your documents) is sent to external AI providers when no answer is found in your data. You can enforce stricter rules in settings so company data is only sent to local / trusted AI models such as Ollama."},
+    {"id": "languages", "q": "Which languages can you understand?", "also": ["hindi me baat kar sakte ho", "kaunsi language samajhte ho", "hinglish"],
+     "a": "I understand English, Hindi and Hinglish (Hindi written in English letters). Ask in any of these and I will try to reply in the same style."},
+    {"id": "company-info-template", "q": "Tell me about our company", "also": ["company ke baare me batao", "about us", "hamari company kya karti hai"],
+     "a": "Edit this answer with your company profile: company name, founding year, services (e.g. permanent staffing, contract staffing, RPO, digital marketing), industries served, locations, team size, key clients and contact details. You can also upload your company profile PDF in the My data tab."},
+    {"id": "services-template", "q": "What services do we offer?", "also": ["hum kya services dete hai", "services list", "company services"],
+     "a": "Edit this answer with your actual services. Typical services for a staffing and marketing company: permanent staffing, contract and temporary staffing, executive search, RPO, bulk / campus hiring, payroll and compliance management, and digital marketing (social media, SEO, ads, lead generation)."},
+    {"id": "office-address-template", "q": "What is the office address?", "also": ["office kahan hai", "office address", "location kya hai"],
+     "a": "Edit this answer with your office address, Google Maps link, working hours and contact number."}
+  ]
+}
