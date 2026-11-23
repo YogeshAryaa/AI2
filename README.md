@@ -46,6 +46,8 @@ docker compose up -d --build            # UI + API on port 8000, MongoDB with li
 ```
 For the bundled MongoDB, set `MONGODB_URI=mongodb://mongo:27017/?replicaSet=rs0` in `backend/.env`.
 For MongoDB Atlas, set `MONGODB_URI` there to your Atlas connection string; do not commit `backend/.env`.
+The first app start downloads the embedding model (about 470 MB); OCR models download the first time OCR is used.
+Docker keeps these downloads in the `model-cache` volume instead of embedding them in the image.
 Put HTTPS in front (e.g. Caddy: `ai.yourcompany.com { reverse_proxy localhost:8000 }`). Without Docker:
 `cd frontend && npm run build`, then run uvicorn as in `run-backend.sh` (without `--reload`, with `--workers 2`);
 the backend serves the built UI itself.

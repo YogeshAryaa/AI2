@@ -1,5 +1,6 @@
 # docker compose up -d --build   ->  http://YOUR_SERVER:8000
 # Uses its own MongoDB as a single-node replica set, so live sync (change streams) works.
+# Embedding and OCR models download on first use and persist in a Docker volume.
 # Set MONGODB_URI in backend/.env to mongodb://mongo:27017/?replicaSet=rs0 for this service,
 # or to your external MongoDB URI. The local MongoDB service still starts for either setting.
 services:
@@ -19,9 +20,11 @@ services:
     env_file: backend/.env
     environment:
       WORKERS: "2"
+    volumes: [model-cache:/models]
     depends_on:
       mongo: { condition: service_healthy }
     ports: ["8000:8000"]
 
 volumes:
   mongo-data:
+  model-cache:

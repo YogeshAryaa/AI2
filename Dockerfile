@@ -15,13 +15,9 @@ COPY backend/requirements.txt .
 RUN pip install -r requirements.txt
 COPY backend/app ./app
 COPY --from=ui /ui/dist /app/frontend/dist
-# Download the embedding model at build time so the first start is fast
-ARG EMBEDDING_MODEL=intfloat/multilingual-e5-small
-RUN python -c "from sentence_transformers import SentenceTransformer as S; S('${EMBEDDING_MODEL}')"
-# OCR models for Studio (Scan & read) are downloaded at build time too
+# Models download on first use and are persisted by the Compose volume.
 ENV OCR_MODEL_DIR=/models/easyocr
-RUN python -c "import easyocr; easyocr.Reader(['en','hi'], gpu=False, model_storage_directory='/models/easyocr')"
-RUN useradd -m app && chown -R app /app /models
+RUN useradd -m app && mkdir -p /models && chown -R app /app /models
 USER app
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=90s CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"
