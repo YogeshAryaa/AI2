@@ -9,8 +9,8 @@ RUN npm run build
 FROM python:3.11-slim
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 HF_HOME=/models
 WORKDIR /app/backend
-# CPU-only torch keeps the image ~1.5 GB smaller than the default CUDA build
-RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
+# Keep the CPU Torch and torchvision wheels on the same release to avoid missing operators.
+RUN pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cpu
 COPY backend/requirements.txt .
 RUN pip install -r requirements.txt
 COPY backend/app ./app
