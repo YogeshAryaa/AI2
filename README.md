@@ -41,9 +41,11 @@ tried in order (top first); one that errors or hits its limit is paused and the 
 ## Deploy on a server (one command)
 
 ```bash
-cp backend/environment.example backend/.env    # set ADMIN_TOKEN, APP_SECRET_KEY, DOCS_ENABLED=false
+cp backend/environment.example backend/.env    # set MONGODB_URI, ADMIN_TOKEN, APP_SECRET_KEY, DOCS_ENABLED=false
 docker compose up -d --build            # UI + API on port 8000, MongoDB with live sync included
 ```
+For the bundled MongoDB, set `MONGODB_URI=mongodb://mongo:27017/?replicaSet=rs0` in `backend/.env`.
+For MongoDB Atlas, set `MONGODB_URI` there to your Atlas connection string; do not commit `backend/.env`.
 Put HTTPS in front (e.g. Caddy: `ai.yourcompany.com { reverse_proxy localhost:8000 }`). Without Docker:
 `cd frontend && npm run build`, then run uvicorn as in `run-backend.sh` (without `--reload`, with `--workers 2`);
 the backend serves the built UI itself.
